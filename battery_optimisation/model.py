@@ -35,8 +35,16 @@ def solve_pyomo_generalized(times,
                             min_settlement_power = 0.,
                             efficiency=0.95,
                             solver='cbc'):
+    """Build and solve a Pyomo battery optimisation model.
+
+    The model balances load, PV production, battery power and grid power.
+    Its objective includes network energy charges, power-block peaks,
+    day-ahead import/export costs and battery degradation.
+    
+    """
 
     model = pyo.ConcreteModel()
+    # PV curtailment is only considered for intervals with positive production.
     pv_times = [t for t in times if production[t] > 0]
     T = times
     B_E = energy_blocks

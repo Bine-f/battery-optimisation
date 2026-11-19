@@ -2,7 +2,7 @@
 
 Mixed-integer linear programming (MILP) model for the optimal operation of a household battery with PV, built with
 [Pyomo](https://www.pyomo.org/). The battery is scheduled in 15-minute steps, one week at a time, so that the
-electricity bill under Slovenian day-ahead prices and the Slovenian network tariff is as low as possible.
+electricity bill under Slovenian day-ahead prices and the Slovenian network tariff is as low as possible. Current tariffs used are for user group 0 (connected to low voltage grid). 
 
 ![Optimal operation in one week](docs/week.png)
 
@@ -12,20 +12,19 @@ One year of measured household consumption (Jan 2025 – Jan 2026), a 15 kWp PV 
 
 | | No PV | PV | PV + battery |
 | --- | ---: | ---: | ---: |
-| Energy at day-ahead prices | 626 € | −428 € | −949 € |
-| Network tariff – energy | 83 € | 43 € | 54 € |
-| Network tariff – power | 334 € | 325 € | 319 € |
-| Battery degradation | – | – | 173 € |
-| **Total** | **1043 €** | **−61 €** | **−403 €** |
+| Energy at day-ahead prices | 626 € | −428 € | −938 € |
+| Network tariff – energy | 113 € | 57 € | 65 € |
+| Network tariff – power | 239 € | 233 € | 229 € |
+| Battery degradation | – | – | 168 € |
+| **Total** | **978 €** | **−139 €** | **−477 €** |
 
 The optimisation runs week by week, the bill is then calculated for every month (the power charge uses the monthly
 peak, at least the 5 kW settlement power) and summed over the year. A negative total means that the revenue from
 exported energy is larger than the costs.
 
-The battery saves **342 € per year** compared to PV alone (515 € minus 173 € degradation), with about 350 full
-cycles. Most of the saving comes from storing PV energy and selling it in the evening price peaks, so it is largest
-from spring to autumn (50–65 € per month) and small in winter (5–20 € per month). The network power charge hardly
-changes, because the minimum settlement power is already above most of the household's peaks.
+The battery saves **338 € per year** compared to PV alone, with about **336 full cycles**. Monthly battery savings
+before degradation range from 4 € to 65 €; they are largest from spring to autumn and smaller in winter. The network
+power charge hardly changes, because the minimum settlement power is already above most of the household's peaks.
 
 ![Electricity bill](docs/savings.png)
 
@@ -58,7 +57,7 @@ scripts/
 notebooks/
 └── battery_optimisation.ipynb   parameters, optimisation, results and figures
 data/
-├── load_household1.csv    household with an existing PV plant (net power), use with PV size 0
+├── load_household1.csv    household with an existing PV plant and heatpump, use with PV size 0
 ├── load_household2.csv    household without PV
 ├── pv_data.csv            synthetic PV profile for 1 kWp
 └── day_ahead_prices.csv   SI day-ahead prices (EUR/MWh)
@@ -86,7 +85,6 @@ python scripts/download_prices.py
 jupyter notebook notebooks/battery_optimisation.ipynb
 ```
 
-With HiGHS one week (672 time steps) solves in under a second, the whole year in about half a minute.
 
 ## License
 
