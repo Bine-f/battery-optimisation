@@ -163,10 +163,12 @@ def calculate_bill(grid_power: pd.Series, price: pd.Series, block: pd.Series, en
     energy = ((grid_import - grid_export) * price / 1000 * dt).groupby(month).sum()
     network_energy = (grid_import * dt * block.map(energy_grid_prices)).groupby(month).sum()
 
-    monthly_peaks = grid_import.groupby(month).max().clip(lower=min_settlement_power)
+    # Power charge per tariff block: monthly peak in each block (at least min_settlement_power) times its price
+    block_peaks = grid_import.groupby([month, block]).max().clip(lower=min_settlement_power)
+    block_charge = block_peaks * block_peaks.index.get_level_values(1).map(block_power_prices)
     days_covered = grid_power.groupby(month).size() / 96
-    share_of_month = (days_covered / monthly_peaks.index.days_in_month).clip(upper=1)
-    network_power = monthly_peaks * block_power_prices[1] * share_of_month
+    share_of_month = (days_covered / days_covered.index.days_in_month).clip(upper=1)
+    network_power = block_charge.groupby(level=0).sum() * share_of_month
 
     bill = pd.DataFrame({
         'energy': energy,

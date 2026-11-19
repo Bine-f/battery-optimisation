@@ -14,15 +14,15 @@ One year of measured household consumption (Jan 2025 – Jan 2026), a 15 kWp PV 
 | --- | ---: | ---: | ---: |
 | Energy at day-ahead prices | 626 € | −428 € | −938 € |
 | Network tariff – energy | 113 € | 57 € | 65 € |
-| Network tariff – power | 239 € | 233 € | 229 € |
+| Network tariff – power | 161 € | 160 € | 160 € |
 | Battery degradation | – | – | 168 € |
-| **Total** | **978 €** | **−139 €** | **−477 €** |
+| **Total** | **900 €** | **−212 €** | **−545 €** |
 
 The optimisation runs week by week, the bill is then calculated for every month (the power charge uses the monthly
 peak, at least the 5 kW settlement power) and summed over the year. A negative total means that the revenue from
 exported energy is larger than the costs.
 
-The battery saves **338 € per year** compared to PV alone, with about **336 full cycles**. Monthly battery savings
+The battery saves **334 € per year** compared to PV alone, with about **336 full cycles**. Monthly battery savings
 before degradation range from 4 € to 65 €; they are largest from spring to autumn and smaller in winter. The network
 power charge hardly changes, because the minimum settlement power is already above most of the household's peaks.
 
