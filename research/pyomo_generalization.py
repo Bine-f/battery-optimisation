@@ -175,7 +175,7 @@ def solve_pyomo_generalized(times,
     # model.obj = pyo.Objective(expr=block_energy_cost + block_peak_cost + grid_energy_cost + battery_cost, sense=pyo.minimize)
 
     # Solve
-    solver = pyo.SolverFactory('glpk')  # or 'cbc', 'glpk', etc.
+    solver = pyo.SolverFactory('cbc')  # or 'cbc', 'glpk', etc.
     results = solver.solve(model, tee=False)
     if not (results.solver.status == pyo.SolverStatus.ok
             and results.solver.termination_condition

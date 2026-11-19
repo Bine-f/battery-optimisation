@@ -61,7 +61,7 @@ pip install -r requirements.txt
 # the model uses the GLPK solver: install glpk (e.g. conda install -c conda-forge glpk)
 cd research
 python generate_pv.py
-python download_prices.py
+python download_prices.py 
 jupyter notebook pyomio_testing.ipynb
 ```
 
