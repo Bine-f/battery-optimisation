@@ -1,19 +1,31 @@
 import argparse
 import json
-import urllib.request
-import pandas as pd
-
-API_URL = "https://api.energy-charts.info/price?bzn={zone}&start={start}&end={end}"
-
-
 import time
 import urllib.error
 import urllib.request
+from pathlib import Path
+import pandas as pd
+
+API_URL = "https://api.energy-charts.info/price?bzn={zone}&start={start}&end={end}"
+DATA_DIR = Path(__file__).resolve().parents[1] / "data"
 
 def fetch_prices(zone: str, start: str, end: str) -> pd.DataFrame:
     """
-    Downloads day-ahead prices with automatic retry on rate limiting.
-    """
+	Downloads day-ahead prices for one bidding zone from the Energy-Charts API (Fraunhofer ISE),
+	retries when the API limits the number of requests (HTTP 429)
+
+	Args:
+	----------
+		zone: str
+            Bidding zone, e.g. SI
+		start, end: str
+			First and last day, YYYY-MM-DD
+
+	Returns:
+	----------
+		prices: pd.DataFrame
+			Columns date_time (end of the interval, local time) and price (EUR/MWh)
+	"""
     url = API_URL.format(zone=zone, start=start, end=end)
 
     max_retries = 6
@@ -80,7 +92,7 @@ if __name__ == "__main__":
     parser.add_argument("--zone", default="SI")
     parser.add_argument("--start", default="2024-01-01")
     parser.add_argument("--end", default=pd.Timestamp.today().strftime("%Y-%m-%d"))
-    parser.add_argument("--out", default="../data/day_ahead_prices.csv")
+    parser.add_argument("--out", default=str(DATA_DIR / "day_ahead_prices.csv"))
     args = parser.parse_args()
 
     prices = download_prices(args.zone, args.start, args.end)

@@ -1,7 +1,10 @@
 import argparse
+from pathlib import Path
 import numpy as np
 import pandas as pd
 import pvlib
+
+DATA_DIR = Path(__file__).resolve().parents[1] / "data"
 
 
 def cloud_factor(times: pd.DatetimeIndex, rng: np.random.Generator) -> np.array:
@@ -101,7 +104,7 @@ if __name__ == "__main__":
     parser.add_argument("--losses", type=float, default=0.14)
     parser.add_argument("--annual-yield", type=float, default=None, help="scale to kWh per kWp and year")
     parser.add_argument("--seed", type=int, default=0)
-    parser.add_argument("--out", default="../data/pv_data.csv")
+    parser.add_argument("--out", default=str(DATA_DIR / "pv_data.csv"))
     args = parser.parse_args()
 
     pv_data = generate_pv(args.start, args.end, args.latitude, args.longitude, args.altitude, args.tilt,

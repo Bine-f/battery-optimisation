@@ -33,7 +33,8 @@ def solve_pyomo_generalized(times,
                             battery_life_cycles=500,
                             battery_price=1000,
                             min_settlement_power = 0.,
-                            efficiency=0.95):
+                            efficiency=0.95,
+                            solver='cbc'):
 
     model = pyo.ConcreteModel()
     pv_times = [t for t in times if production[t] > 0]
@@ -175,8 +176,8 @@ def solve_pyomo_generalized(times,
     # model.obj = pyo.Objective(expr=block_energy_cost + block_peak_cost + grid_energy_cost + battery_cost, sense=pyo.minimize)
 
     # Solve
-    solver = pyo.SolverFactory('cbc')  # or 'cbc', 'glpk', etc.
-    results = solver.solve(model, tee=False)
+    # cbc, glpk or appsi_highs (pip install highspy)
+    results = pyo.SolverFactory(solver).solve(model, tee=False)
     if not (results.solver.status == pyo.SolverStatus.ok
             and results.solver.termination_condition
             == pyo.TerminationCondition.optimal):
